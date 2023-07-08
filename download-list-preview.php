@@ -4,7 +4,7 @@
  * Description:       Adds a preview to Download List Block with Icons.
  * Requires at least: 6.0
  * Requires PHP:      8.0
- * Version:           @@VersionNumber@@
+ * Version:           1.0.0
  * Author:            Thomas Zwirner
  * Author URI:        https://www.thomaszwirner.de
  * License:           GPL-2.0-or-later
