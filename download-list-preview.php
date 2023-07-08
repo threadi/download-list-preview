@@ -27,6 +27,7 @@ if ( version_compare( PHP_VERSION, '8.0.0' ) >= 0 ) {
 
     // run on plugin-activation.
     register_activation_hook( DL_PREVIEW_PLUGIN, 'downloadlist\Helper::add_generic_iconset' );
+    register_deactivation_hook( DL_PREVIEW_PLUGIN, 'downloadlist_preview_deactivate' );
 
     /**
      * Register the preview iconset.
@@ -39,4 +40,43 @@ if ( version_compare( PHP_VERSION, '8.0.0' ) >= 0 ) {
         return $list;
     }
     add_filter( 'downloadlist_register_iconset', 'downloadlist_register_preview_iconset', 10, 1 );
+
+    /**
+     * Remove our own iconset-taxonomy on deactivation.
+     *
+     * @return void
+     */
+    function downloadlist_preview_deactivate(): void {
+        // delete our own post-type-entries.
+        $query = array(
+            'post_type' => 'dl_icons',
+            'post_status' => array( 'any', 'trash' ),
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+        );
+        $posts = new \WP_Query($query);
+        foreach( $posts->posts as $post_id ) {
+            $delete = false;
+            $terms = wp_get_object_terms( $post_id, 'dl_icon_set' );
+            foreach( $terms as $term ) {
+                if( 'preview' === $term->slug ) {
+                    $delete = true;
+                }
+            }
+            if( $delete ) {
+                wp_delete_post( $post_id );
+            }
+        }
+
+        // delete entries of our own taxonomy for iconsets.
+        $query = array(
+            'taxonomy' => 'dl_icon_set',
+            'hide_empty' => false,
+            'name' => 'preview'
+        );
+        $icon_set = new \WP_Term_Query($query);
+        foreach ($icon_set->get_terms() as $term) {
+            wp_delete_term($term->term_id, 'dl_icon_set');
+        }
+    }
 }
