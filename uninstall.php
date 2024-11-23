@@ -5,4 +5,4 @@
  * @package download-list-preview
  */
 
-// nothing to do
+// nothing to do.
