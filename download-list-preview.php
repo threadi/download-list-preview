@@ -37,6 +37,16 @@ register_activation_hook( DL_PREVIEW_PLUGIN, 'downloadlist\Helper::add_generic_i
 register_deactivation_hook( DL_PREVIEW_PLUGIN, 'downloadlist_preview_deactivate' );
 
 /**
+ * Add translations.
+ *
+ * @return void
+ */
+function downloadlist_preview_load_languages(): void {
+    load_plugin_textdomain( 'download-list-preview', false, dirname( plugin_basename( DL_PREVIEW_PLUGIN ) ) . '/languages' );
+}
+add_action( 'init', 'downloadlist_preview_load_languages' );
+
+/**
  * Register the preview iconset.
  *
  * @param array $list The list of iconsets.
