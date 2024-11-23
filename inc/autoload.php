@@ -5,6 +5,9 @@
  * @package download-list-preview
  */
 
+// prevent direct access.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Add autoloader for each php-class in this plugin.
  */

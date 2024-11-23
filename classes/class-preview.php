@@ -7,6 +7,9 @@
 
 namespace downloadlist_preview;
 
+// prevent direct access.
+defined( 'ABSPATH' ) || exit;
+
 use downloadlist\Helper;
 use downloadlist\Iconset;
 use downloadlist\Iconset_Base;
@@ -52,7 +55,7 @@ class Preview extends Iconset_Base implements Iconset {
      * @return void
      */
     public function init(): void {
-        $this->label = __( 'Preview', 'download-list-preview' );
+        $this->label = __( 'Preview Images', 'download-list-preview' );
 
         // get term of this iconset.
         $query = array(
@@ -114,6 +117,8 @@ class Preview extends Iconset_Base implements Iconset {
 
     /**
      * Return style for single file.
+     *
+     * This is the magic of this iconset: we use a thumbnail of the given file as icon image. WordPress is handling its generation.
      *
      * @param int $attachment_id ID of the attachment.
      * @return string
