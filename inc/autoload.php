@@ -5,6 +5,9 @@
  * @package download-list-preview
  */
 
+// prevent direct access.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Add autoloader for each php-class in this plugin.
  */
@@ -19,7 +22,7 @@ spl_autoload_register( 'downloadlist_preview_autoloader' );
  */
 function downloadlist_preview_autoloader( string $class_name ): void {
 	// If the specified $class_name does not include our namespace, duck out.
-	if (!str_contains($class_name, 'downloadlist_preview')) {
+	if ( ! str_contains( $class_name, 'downloadlist_preview' ) ) {
 		return;
 	}
 

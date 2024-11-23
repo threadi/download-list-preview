@@ -1,0 +1,31 @@
+{
+    "name": "threadi/download-list-preview",
+	"version": "1.0.1",
+    "description": "Adds a preview iconset to Download List Block with Icons.",
+    "authors": [
+        {
+            "name": "Thomas Zwirner",
+            "email": "info@thomaszwirner.de"
+        }
+    ],
+    "type": "wordpress-plugin",
+    "homepage": "https://www.thomaszwirner.de",
+    "minimum-stability": "stable",
+	"scripts": {
+		"post-install-cmd": [
+			"\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs,vendor/phpcsstandards/phpcsutils,vendor/phpcsstandards/phpcsextra,vendor/sirbrillig/phpcs-variable-analysis,vendor/automattic/vipwpcs"
+		],
+		"post-update-cmd": [
+			"\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs,vendor/phpcsstandards/phpcsutils,vendor/phpcsstandards/phpcsextra,vendor/sirbrillig/phpcs-variable-analysis,vendor/automattic/vipwpcs"
+		]
+	},
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^3.1.0",
+		"automattic/vipwpcs": "^3.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}
