@@ -33,7 +33,7 @@ const DL_PREVIEW_PLUGIN = __FILE__;
 require_once __DIR__ . '/inc/autoload.php';
 
 // run on plugin-activation.
-register_activation_hook( DL_PREVIEW_PLUGIN, 'downloadlist\Helper::add_generic_iconsets' );
+register_activation_hook( DL_PREVIEW_PLUGIN, 'DownloadListWithIcons\Plugin\Helper');
 register_deactivation_hook( DL_PREVIEW_PLUGIN, 'downloadlist_preview_deactivate' );
 
 /**

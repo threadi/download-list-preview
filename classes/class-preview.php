@@ -10,9 +10,9 @@ namespace downloadlist_preview;
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use downloadlist\Helper;
-use downloadlist\Iconset;
-use downloadlist\Iconset_Base;
+use DownloadListWithIcons\Iconsets\Iconset;
+use DownloadListWithIcons\Iconsets\Iconset_Base;
+use DownloadListWithIcons\Plugin\Helper;
 use WP_Query;
 use WP_Term;
 use WP_Term_Query;
