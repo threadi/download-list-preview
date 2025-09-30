@@ -4,7 +4,7 @@
  * Description:       Adds a preview iconset to Download List Block with Icons.
  * Requires at least: 6.0
  * Requires PHP:      8.0
- * Version:           1.0.1
+ * Version:           1.1.0
  * Author:            Thomas Zwirner
  * Author URI:        https://www.thomaszwirner.de
  * License:           GPL-2.0-or-later
@@ -14,10 +14,8 @@
  * @package download-list-preview
  */
 
-// Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+// prevent direct access.
+defined( 'ABSPATH' ) || exit;
 
 // bail if PHP < 8.0 is used.
 if ( version_compare( PHP_VERSION, '8.0.0' ) < 0 ) {
@@ -32,8 +30,8 @@ const DL_PREVIEW_PLUGIN = __FILE__;
 // embed necessary files.
 require_once __DIR__ . '/inc/autoload.php';
 
-// run on plugin-activation.
-register_activation_hook( DL_PREVIEW_PLUGIN, 'downloadlist\Helper::add_generic_iconsets' );
+// run on plugin-deactivation.
+register_activation_hook( DL_PREVIEW_PLUGIN, 'DownloadListWithIcons\Plugin\Helper::add_generic_iconsets' );
 register_deactivation_hook( DL_PREVIEW_PLUGIN, 'downloadlist_preview_deactivate' );
 
 /**

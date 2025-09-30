@@ -10,9 +10,8 @@ namespace downloadlist_preview;
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use downloadlist\Helper;
-use downloadlist\Iconset;
-use downloadlist\Iconset_Base;
+use DownloadListWithIcons\Iconsets\Iconset;
+use DownloadListWithIcons\Iconsets\Iconset_Base;
 use WP_Query;
 use WP_Term;
 use WP_Term_Query;
@@ -49,6 +48,24 @@ class Preview extends Iconset_Base implements Iconset {
 	 */
 	private WP_Term|null $term = null;
 
+    /**
+     * Instance of this object.
+     *
+     * @var ?Preview
+     */
+    private static ?Preview $instance = null;
+
+    /**
+     * Return the instance of this Singleton object.
+     */
+    public static function get_instance(): Preview {
+        if ( is_null( self::$instance ) ) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
 	/**
 	 * Initialize the object.
 	 *
@@ -61,7 +78,7 @@ class Preview extends Iconset_Base implements Iconset {
 		$query   = array(
 			'taxonomy'   => 'dl_icon_set',
 			'hide_empty' => false,
-			'name'       => $this->get_slug(),
+			'slug'       => $this->get_slug(),
 		);
 		$results = new WP_Term_Query( $query );
 		foreach ( $results->get_terms() as $term ) {
@@ -70,7 +87,7 @@ class Preview extends Iconset_Base implements Iconset {
 	}
 
 	/**
-	 * Get style for given file-type.
+	 * Return style for given file-type.
 	 *
 	 * @param int    $post_id ID of the icon-post.
 	 * @param string $term_slug The slug of the term this iconset is using.
@@ -82,18 +99,9 @@ class Preview extends Iconset_Base implements Iconset {
 	}
 
 	/**
-	 * Return the by iconset supported filetypes.
+	 * Return icons this set is assigned to.
 	 *
-	 * @return array
-	 */
-	public function get_file_types(): array {
-		return array_keys( array_flip( helper::get_mime_types() ) );
-	}
-
-	/**
-	 * Get icons this set is assigned to.
-	 *
-	 * @return array The post-IDs of the icons as array.
+	 * @return array<int,int> The post-IDs of the icons as array.
 	 */
 	public function get_icons(): array {
 		$query   = array(
@@ -111,8 +119,14 @@ class Preview extends Iconset_Base implements Iconset {
 		);
 		$results = new WP_Query( $query );
 
+        // collect the icons.
+        $list = array();
+        foreach( $results->get_posts() as $post_id ) {
+            $list[] = absint( $post_id );
+        }
+
 		// return resulting list.
-		return $results->posts;
+		return $list;
 	}
 
 	/**
@@ -125,13 +139,19 @@ class Preview extends Iconset_Base implements Iconset {
 	 */
 	public function get_style_for_file( int $attachment_id ): string {
 		// get width and height set on term.
-		$height = get_term_meta( $this->term->term_id, 'height', 24 );
-		$width  = get_term_meta( $this->term->term_id, 'width', 24 );
+		$height = absint( get_term_meta( $this->term->term_id, 'height', true ) );
+		$width  = absint( get_term_meta( $this->term->term_id, 'width', true ) );
+        if( $height <= 0 ) {
+            $height = 24;
+        }
+        if( $width <= 0 ) {
+            $width = 24;
+        }
 
 		// get image.
 		$image = wp_get_attachment_image_url( $attachment_id, 'downloadlist-icon-' . $this->get_slug() );
 		if ( ! empty( $image ) ) {
-			return '.wp-block-downloadlist-list.iconset-' . $this->get_slug() . ' .attachment-' . $attachment_id . ':before { content: "";background-image: url(' . $image . ');background-repeat: no-repeat;border: 1px solid #ccc;border-radius: 4px;height: ' . $height . 'px;width: ' . $width . 'px; }';
+			return '.wp-block-downloadlist-list.iconset-' . $this->get_slug() . ' .attachment-' . $attachment_id . ':before { content: "";background-image: url(' . $image . ');background-repeat: no-repeat;background-size: contain;background-position: 50% 50%;border: 1px solid #ccc;border-radius: 4px;height: ' . $height . 'px;width: ' . $width . 'px; }';
 		}
 		return '';
 	}
